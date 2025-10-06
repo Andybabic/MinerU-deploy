@@ -1,0 +1,31 @@
+# Optional local override to enable NVIDIA GPU access via Compose
+# Place this file next to docker-compose.yaml. Docker Compose will automatically
+# use it (docker compose up) for local development. Do NOT commit this file to
+# environments where the deployment validator rejects 'device_requests'.
+
+version: '3.8'
+
+services:
+  mineru-vllm-server:
+    device_requests:
+      - driver: nvidia
+        count: 1
+        capabilities: [gpu]
+
+  mineru-api:
+    device_requests:
+      - driver: nvidia
+        count: 1
+        capabilities: [gpu]
+
+  mineru-gradio:
+    device_requests:
+      - driver: nvidia
+        count: 1
+        capabilities: [gpu]
+
+# Usage:
+# - Local with GPU: `docker compose up` (Compose loads this override automatically)
+# - Without GPU: remove/rename this file or run `docker compose -f docker-compose.yaml up`
+# - If your environment requires a different GPU configuration, adapt the blocks
+#   above or set NVIDIA_VISIBLE_DEVICES environment variables instead.

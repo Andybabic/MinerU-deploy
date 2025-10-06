@@ -24,11 +24,13 @@ services:
       - ./models:/root/.cache/mineru_models
       - ./output:/workspace/output
     deploy: {}
-    # GPU support: Docker Compose (v2.4+ / 1.28+) uses device_requests to request GPUs
-    device_requests:
-      - driver: nvidia
-        count: 1
-        capabilities: [gpu]
+    # NOTE: 'device_requests' was removed from this file to remain compatible with
+    # some deployment validators (for example Coolify) that reject the key.
+    #
+    # To enable GPUs on a local machine that supports the Compose 'device_requests'
+    # field, create a `docker-compose.override.yml` (example provided in the repo)
+    # or add the GPU configuration at deploy time. See the companion
+    # `docker-compose.override.yml` for a local GPU example.
 
   mineru-api:
     build:
@@ -46,10 +48,7 @@ services:
     volumes:
       - ./models:/root/.cache/mineru_models
       - ./output:/workspace/output
-    device_requests:
-      - driver: nvidia
-        count: 1
-        capabilities: [gpu]
+    # GPU settings removed for validator compatibility (see note above)
 
   mineru-gradio:
     build:
@@ -67,10 +66,7 @@ services:
     volumes:
       - ./models:/root/.cache/mineru_models
       - ./output:/workspace/output
-    device_requests:
-      - driver: nvidia
-        count: 1
-        capabilities: [gpu]
+    # GPU settings removed for validator compatibility (see note above)
 
 # Notes:
 # - If you are in China and want to use the mirrored Dockerfile, change the build.context for services to ./docker/china

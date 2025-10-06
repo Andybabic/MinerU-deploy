@@ -1,0 +1,80 @@
+version: '3.8'
+
+# Root-level docker-compose for MinerU
+# - Builds images from docker/global (or docker/china) Dockerfiles
+# - Provides three services: mineru-vllm-server (30000), mineru-api (8000), mineru-gradio (7860)
+# - Uses Docker GPU device_requests to expose NVIDIA GPUs to containers
+# - Persists downloaded models and user outputs to host volumes
+
+services:
+  mineru-vllm-server:
+    build:
+      context: ./docker/global
+      dockerfile: Dockerfile
+    image: mineru-vllm:local
+    container_name: mineru-vllm-server
+    restart: unless-stopped
+    ports:
+      - "30000:30000"
+    environment:
+      MINERU_MODEL_SOURCE: local
+    entrypoint: ["mineru-vllm-server"]
+    command: ["--host", "0.0.0.0", "--port", "30000"]
+    volumes:
+      - ./models:/root/.cache/mineru_models
+      - ./output:/workspace/output
+    deploy: {}
+    # GPU support: Docker Compose (v2.4+ / 1.28+) uses device_requests to request GPUs
+    device_requests:
+      - driver: nvidia
+        count: 1
+        capabilities: [gpu]
+
+  mineru-api:
+    build:
+      context: ./docker/global
+      dockerfile: Dockerfile
+    image: mineru-api:local
+    container_name: mineru-api
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      MINERU_MODEL_SOURCE: local
+    entrypoint: ["mineru-api"]
+    command: ["--host", "0.0.0.0", "--port", "8000"]
+    volumes:
+      - ./models:/root/.cache/mineru_models
+      - ./output:/workspace/output
+    device_requests:
+      - driver: nvidia
+        count: 1
+        capabilities: [gpu]
+
+  mineru-gradio:
+    build:
+      context: ./docker/global
+      dockerfile: Dockerfile
+    image: mineru-gradio:local
+    container_name: mineru-gradio
+    restart: unless-stopped
+    ports:
+      - "7860:7860"
+    environment:
+      MINERU_MODEL_SOURCE: local
+    entrypoint: ["mineru-gradio"]
+    command: ["--server-name", "0.0.0.0", "--server-port", "7860", "--enable-vllm-engine", "true"]
+    volumes:
+      - ./models:/root/.cache/mineru_models
+      - ./output:/workspace/output
+    device_requests:
+      - driver: nvidia
+        count: 1
+        capabilities: [gpu]
+
+# Notes:
+# - If you are in China and want to use the mirrored Dockerfile, change the build.context for services to ./docker/china
+# - The Dockerfiles already run `mineru-models-download` during image build which will populate models inside the image.
+#   Mounting a host `./models` volume allows model persistence across container rebuilds and avoids repeated downloads.
+# - If you don't have an NVIDIA GPU or don't want containers to use the GPU, remove the `device_requests` blocks.
+# - To run only specific services, use `docker compose up mineru-api` etc.

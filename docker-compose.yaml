@@ -14,6 +14,8 @@ services:
     image: mineru-vllm:local
     container_name: mineru-vllm-server
     restart: unless-stopped
+    ports:
+      - "30000:30000"
 
     environment:
       MINERU_MODEL_SOURCE: local
@@ -40,6 +42,8 @@ services:
     image: mineru-api:local
     container_name: mineru-api
     restart: unless-stopped
+    ports:
+      - "8001:8000"
 
     environment:
       MINERU_MODEL_SOURCE: local
@@ -66,6 +70,8 @@ services:
     image: mineru-gradio:local
     container_name: mineru-gradio
     restart: unless-stopped
+    ports:
+      - "7860:7860"
 
     environment:
       MINERU_MODEL_SOURCE: local

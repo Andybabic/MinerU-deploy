@@ -1,5 +1,5 @@
 version: '3.8'
-
+#test
 # Root-level docker-compose for MinerU
 # - Builds images from docker/global (or docker/china) Dockerfiles
 # - Provides three services: mineru-vllm-server (30000), mineru-api (8000), mineru-gradio (7860)

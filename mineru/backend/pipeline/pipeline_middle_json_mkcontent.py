@@ -274,6 +274,9 @@ def union_make(pdf_info_dict: list,
         if make_mode in [MakeMode.MM_MD, MakeMode.NLP_MD]:
             if not paras_of_layout:
                 continue
+            # Füge Seitennummer-Kommentar hinzu (Seite beginnt bei 1 für Benutzer)
+            page_marker = f"<!-- Page {page_idx + 1} -->"
+            output_content.append(page_marker)
             page_markdown = make_blocks_to_markdown(paras_of_layout, make_mode, img_buket_path)
             output_content.extend(page_markdown)
         elif make_mode == MakeMode.CONTENT_LIST:

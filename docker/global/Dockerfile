@@ -22,8 +22,8 @@ RUN apt-get update && \
 COPY . /workspace/project
 WORKDIR /workspace/project
 
-# Install mineru from local project in editable mode
-RUN python3 -m pip install -e . --break-system-packages && \
+# Install mineru with core extras (includes gradio, fastapi, vlm, pipeline)
+RUN python3 -m pip install -e ".[core]" --break-system-packages && \
     python3 -m pip cache purge
 
 # Download models and update the configuration file

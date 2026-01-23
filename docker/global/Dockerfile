@@ -18,8 +18,12 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# Install mineru latest
-RUN python3 -m pip install -U 'mineru[core]>=2.7.0' --break-system-packages && \
+# Copy local mineru project files
+COPY mineru /workspace/mineru
+WORKDIR /workspace/mineru
+
+# Install mineru from local project in editable mode
+RUN python3 -m pip install -e . --break-system-packages && \
     python3 -m pip cache purge
 
 # Download models and update the configuration file

@@ -12,7 +12,6 @@ on:
       - "**.md"
 jobs:
   cli-test:
-    if: github.repository == 'opendatalab/MinerU'
     runs-on: ubuntu-latest
     timeout-minutes: 240
     strategy:

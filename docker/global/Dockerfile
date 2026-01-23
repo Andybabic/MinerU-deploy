@@ -18,9 +18,9 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# Copy local mineru project files
-COPY mineru /workspace/mineru
-WORKDIR /workspace/mineru
+# Copy entire project for installation
+COPY . /workspace/project
+WORKDIR /workspace/project
 
 # Install mineru from local project in editable mode
 RUN python3 -m pip install -e . --break-system-packages && \

@@ -15,9 +15,13 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# Install mineru latest
+# Copy local mineru project
+COPY . /workspace/mineru-source
+
+# Install mineru from local source (development mode)
+WORKDIR /workspace/mineru-source
 RUN python3 -m pip install -U pip -i https://mirrors.aliyun.com/pypi/simple && \
-    python3 -m pip install 'mineru[core]>=2.6.5' \
+    python3 -m pip install -e '.[core]' \
                             numpy==1.26.4 \
                             opencv-python==4.11.0.86 \
                             -i https://mirrors.aliyun.com/pypi/simple && \

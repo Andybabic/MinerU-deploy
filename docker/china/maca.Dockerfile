@@ -19,9 +19,13 @@ RUN apt-get update && \
 RUN sed -i '3s/^Version: 0.15.1+metax3\.1\.0\.4$/Version: 0.21.0+metax3.1.0.4/' /opt/conda/lib/python3.10/site-packages/torchvision-0.15.1+metax3.1.0.4.dist-info/METADATA && \
     mv /opt/conda/lib/python3.10/site-packages/torchvision-0.15.1+metax3.1.0.4.dist-info /opt/conda/lib/python3.10/site-packages/torchvision-0.21.0+metax3.1.0.4.dist-info
 
-# Install mineru latest
+# Copy local mineru project
+COPY . /workspace/mineru-source
+
+# Install mineru from local source (development mode)
+WORKDIR /workspace/mineru-source
 RUN /opt/conda/bin/python3 -m pip install -U pip -i https://mirrors.aliyun.com/pypi/simple && \
-    /opt/conda/bin/python3 -m pip install 'mineru[core]>=2.6.5' \
+    /opt/conda/bin/python3 -m pip install -e '.[core]' \
                                            numpy==1.26.4 \
                                            opencv-python==4.11.0.86 \
                                            -i https://mirrors.aliyun.com/pypi/simple && \

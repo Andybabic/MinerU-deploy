@@ -9,8 +9,8 @@ version: '3.8'
 services:
   mineru-vllm-server:
     build:
-      context: ./docker/global
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: docker/global/Dockerfile
     image: mineru-vllm:local
     container_name: mineru-vllm-server
     restart: unless-stopped
@@ -37,8 +37,8 @@ services:
 
   mineru-api:
     build:
-      context: ./docker/global
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: docker/global/Dockerfile
     image: mineru-api:local
     container_name: mineru-api
     restart: unless-stopped
@@ -65,8 +65,8 @@ services:
 
   mineru-gradio:
     build:
-      context: ./docker/global
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: docker/global/Dockerfile
     image: mineru-gradio:local
     container_name: mineru-gradio
     restart: unless-stopped

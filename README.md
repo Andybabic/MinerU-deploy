@@ -348,3 +348,4 @@ Currently, some models in this project are trained based on YOLO. However, since
 - [Magic-HTML (Mixed web page extraction tool)](https://github.com/opendatalab/magic-html)
 - [Magic-Doc (Fast speed ppt/pptx/doc/docx/pdf extraction tool)](https://github.com/InternLM/magic-doc) 
 - [Dingo: A Comprehensive AI Data Quality Evaluation Tool](https://github.com/MigoXLab/dingo)
+# Auto-deploy test - Fri Jan 23 09:38:03 CET 2026

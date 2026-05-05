@@ -10,7 +10,7 @@ services:
   mineru-vllm-server:
     build:
       context: .
-      dockerfile: docker/global/Dockerfile
+      dockerfile: ${DOCKERFILE_PATH:-docker/global/Dockerfile}  # Default: global
     image: mineru-vllm:local
     container_name: mineru-vllm-server
     restart: unless-stopped

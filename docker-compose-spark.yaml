@@ -1,0 +1,94 @@
+version: '3.8'
+
+services:
+  mineru-vllm-server:
+    build:
+      context: .
+      dockerfile: docker/spark/Dockerfile
+    image: 'mineru-vllm:local'
+    container_name: mineru-vllm-server
+    restart: unless-stopped
+    ports:
+      - '30000:30000'
+    environment:
+      MINERU_MODEL_SOURCE: local
+    entrypoint:
+      - mineru-vllm-server
+    command:
+      - '--host'
+      - 0.0.0.0
+      - '--port'
+      - '30000'
+    volumes:
+      - './models:/root/.cache/mineru_models'
+      - './output:/workspace/output'
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities:
+                - gpu
+
+  mineru-api:
+    build:
+      context: .
+      dockerfile: docker/spark/Dockerfile
+    image: 'mineru-api:local'
+    container_name: mineru-api
+    restart: unless-stopped
+    ports:
+      - '8001:8000'
+    environment:
+      MINERU_MODEL_SOURCE: local
+    entrypoint:
+      - mineru-api
+    command:
+      - '--host'
+      - 0.0.0.0
+      - '--port'
+      - '8000'
+    volumes:
+      - './models:/root/.cache/mineru_models'
+      - './output:/workspace/output'
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities:
+                - gpu
+
+  mineru-gradio:
+    build:
+      context: .
+      dockerfile: docker/spark/Dockerfile
+    image: 'mineru-gradio:local'
+    container_name: mineru-gradio
+    restart: unless-stopped
+    ports:
+      - '7860:7860'
+    environment:
+      MINERU_MODEL_SOURCE: local
+    entrypoint:
+      - mineru-gradio
+    command:
+      - '--server-name'
+      - 0.0.0.0
+      - '--server-port'
+      - '7860'
+      - '--enable-vllm-engine'
+      - 'true'
+    volumes:
+      - './models:/root/.cache/mineru_models'
+      - './output:/workspace/output'
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities:
+                - gpu
